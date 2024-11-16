@@ -1,14 +1,14 @@
  CREATE TABLE account (
     id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     document_number VARCHAR(20) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
 CREATE TABLE transaction (
     id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    account_id INT,
+    account_id INT NOT NULL,
     amount DECIMAL(15, 2) NOT NULL,
-    operation_type VARCHAR(50),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    operation_type VARCHAR(50) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     FOREIGN KEY (account_id) REFERENCES account(id)
 );

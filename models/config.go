@@ -1,9 +1,10 @@
 package models
 
 type Config struct {
-	Host     string `default:"localhost"`
-	Port     int    `default:"5432"`
-	User     string `default:"postgres"`
-	Password string `default:"example"`
-	DBName   string `default:"postgres"`
+	Port       int    `default:"3333"`
+	DBHost     string `default:"localhost"`
+	DBPort     int    `default:"5432"`
+	DBUser     string `default:"postgres"`
+	DBPassword string `default:"example"`
+	DBName     string `default:"postgres"`
 }

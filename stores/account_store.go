@@ -2,6 +2,7 @@ package stores
 
 import (
 	"database/sql"
+	"fmt"
 
 	"transactions/models"
 
@@ -29,6 +30,7 @@ func (s *AccountStore) Create(account *models.Account) (*models.Account, error) 
 	err := s.insertQuery.Values(
 		account.DocumentNumber,
 	).RunWith(s.db).QueryRow().Scan(&account.AccountID, &account.CreatedAt)
+	fmt.Println("ssss-", account.AccountID)
 
 	return account, err
 }
