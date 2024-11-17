@@ -22,7 +22,6 @@ func TestAccount_Create(t *testing.T) {
 	ts := httptest.NewServer(s.Router)
 	defer ts.Close()
 
-	// TODO: marsal a fixture for body
 	res, err := http.Post(
 		ts.URL+"/account", "application/json",
 		bytes.NewBufferString(`{"document_number":"1234567890"}`),

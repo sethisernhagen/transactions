@@ -37,7 +37,7 @@ func createTransactionFixture(t *testing.T, ts *httptest.Server, accountID int64
 	res, err := http.Post(
 		ts.URL+"/transaction", "application/json",
 		bytes.NewBufferString(
-			fmt.Sprintf(`{"account_id":%d,"operation_type":"Purchase","amount":100.0}`, accountID),
+			fmt.Sprintf(`{"account_id":%d,"operation_type":"Purchase","amount":-100.0}`, accountID),
 		),
 	)
 	if err != nil {

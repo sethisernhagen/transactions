@@ -30,8 +30,6 @@ func NewServer() *Server {
 	if err != nil {
 		log.Fatal(err.Error())
 	}
-	// TODO: FIgure out how to close the db connection
-	// defer db.Close()
 
 	router := chi.NewRouter()
 

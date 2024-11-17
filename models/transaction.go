@@ -20,6 +20,8 @@ const (
 )
 
 var ValidOperationTypeIDs = []string{"Purchase", "PurchaseInstallments", "Withdrawal", "CreditVoucher"}
+var NegativeOperationTypeIDs = []string{"Purchase", "PurchaseInstallments", "Withdrawal"}
+var PositiveOperationTypeIDs = []string{"CreditVoucher"}
 
 func (o OperationTypeID) String() string {
 	switch o {
