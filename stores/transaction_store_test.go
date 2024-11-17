@@ -7,7 +7,7 @@ import (
 )
 
 func TestTransactionStore_Create(t *testing.T) {
-	db, err := getTestDB(t)
+	db, err := GetTestDB(t)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -25,7 +25,7 @@ func TestTransactionStore_Create(t *testing.T) {
 }
 
 func TestTransactionStore_Retrieve(t *testing.T) {
-	db, err := getTestDB(t)
+	db, err := GetTestDB(t)
 	if err != nil {
 		t.Fatal(err)
 	}

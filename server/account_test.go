@@ -10,13 +10,15 @@ import (
 	"testing"
 	"time"
 	"transactions/models"
+	"transactions/stores"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestAccount_Create(t *testing.T) {
 	s := NewServer()
-	truncateTables(t, s.db)
+	_, err := stores.GetTestDB(t)
+	assert.NoError(t, err)
 	ts := httptest.NewServer(s.Router)
 	defer ts.Close()
 
@@ -39,7 +41,8 @@ func TestAccount_Create(t *testing.T) {
 
 func TestAccount_Retrieve(t *testing.T) {
 	s := NewServer()
-	truncateTables(t, s.db)
+	_, err := stores.GetTestDB(t)
+	assert.NoError(t, err)
 	ts := httptest.NewServer(s.Router)
 	defer ts.Close()
 

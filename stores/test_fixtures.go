@@ -19,7 +19,7 @@ var (
 	}
 )
 
-func getTestDB(t *testing.T) (*sql.DB, error) {
+func GetTestDB(t *testing.T) (*sql.DB, error) {
 	db, err := GetDB("localhost", 5432, "postgres", "example", "postgres")
 	if err != nil {
 		t.Fatal(err.Error())

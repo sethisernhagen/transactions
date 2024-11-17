@@ -7,7 +7,7 @@ import (
 )
 
 func TestAccountStore_Create(t *testing.T) {
-	db, err := getTestDB(t)
+	db, err := GetTestDB(t)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -21,7 +21,7 @@ func TestAccountStore_Create(t *testing.T) {
 }
 
 func TestAccountStore_Retrieve(t *testing.T) {
-	db, err := getTestDB(t)
+	db, err := GetTestDB(t)
 	if err != nil {
 		t.Fatal(err)
 	}
