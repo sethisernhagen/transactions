@@ -3,12 +3,22 @@ services:
   db:
     image: postgres
     restart: always
-    # set shared memory limit when using docker-compose
     shm_size: 128mb
-    # or set shared memory limit when deploy via swarm stack
     volumes:
       - ./db_init:/docker-entrypoint-initdb.d
     environment:
       POSTGRES_PASSWORD: example
     ports:
       - 5432:5432
+
+  transactions:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      TRANSACTIONS_DBHOST: db
+    ports:
+      - 3333:3333
+    depends_on:
+      - db
