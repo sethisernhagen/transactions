@@ -58,5 +58,6 @@ func NewTransactionResponse(transaction *models.Transaction) *TransactionRespons
 
 func (tr *TransactionResponse) Render(w http.ResponseWriter, r *http.Request) error {
 	tr.OperationType = tr.Transaction.OperationTypeID.String()
+	tr.OperationTypeID = 0
 	return nil
 }
