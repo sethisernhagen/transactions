@@ -10,6 +10,7 @@ import (
 	"testing"
 	"time"
 	"transactions/models"
+	"transactions/resources"
 	"transactions/stores"
 
 	"github.com/stretchr/testify/assert"
@@ -34,11 +35,11 @@ func TestTransaction_Create(t *testing.T) {
 	resBody, err := io.ReadAll(res.Body)
 	assert.NoError(t, err)
 
-	transaction := models.Transaction{}
+	transaction := resources.TransactionResponse{}
 	assert.NoError(t, json.Unmarshal(resBody, &transaction))
 	assert.IsType(t, int64(0), transaction.TransactionID)
 	assert.Equal(t, acct.AccountID, transaction.AccountID)
-	assert.Equal(t, models.OperationTypeID(1), transaction.OperationTypeID)
+	assert.Equal(t, models.Purchase.String(), transaction.OperationType)
 	assert.Equal(t, -100.0, transaction.Amount)
 	assert.True(t, transaction.CreatedAt.After(time.Unix(0, 0)), "transaction.CreatedAt should be after Unix epoch, got %v", transaction.CreatedAt)
 }
@@ -58,9 +59,12 @@ func TestTransaction_Retrieve(t *testing.T) {
 	resBody, err := io.ReadAll(res.Body)
 	assert.NoError(t, err)
 
-	transaction := models.Transaction{}
+	transaction := resources.TransactionResponse{}
 	assert.NoError(t, json.Unmarshal(resBody, &transaction))
-	assert.Equal(t, trx, transaction)
+	assert.Equal(t, trx.AccountID, transaction.AccountID)
+	assert.Equal(t, trx.OperationTypeID.String(), transaction.OperationType)
+	assert.Equal(t, trx.Amount, transaction.Amount)
+	assert.Equal(t, trx.CreatedAt, transaction.CreatedAt)
 }
 
 func TestTransaction_Retrieve_NotFound(t *testing.T) {

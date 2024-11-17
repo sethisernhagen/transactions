@@ -51,6 +51,7 @@ func createTransactionFixture(t *testing.T, ts *httptest.Server, accountID int64
 	transaction := models.Transaction{}
 	json.Unmarshal(resBody, &transaction)
 	assert.NoError(t, json.Unmarshal(resBody, &transaction))
+	transaction.OperationTypeID = models.Purchase
 
 	return transaction
 }
