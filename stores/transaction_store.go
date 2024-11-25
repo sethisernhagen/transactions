@@ -50,9 +50,13 @@ func (s *TransactionStore) Retrieve(id int64) (*models.Transaction, error) {
 	return transaction, err
 }
 
-func (s *TransactionStore) Search(account_id int64) ([]models.Transaction, error) {
+func (s *TransactionStore) Search(account_id int64, include_only_dischargeable bool) ([]models.Transaction, error) {
+	q := s.selectQuery.Where(sq.Eq{"account_id": account_id})
+	if include_only_dischargeable {
+		q = q.Where(sq.Lt{"balance": 0})
+	}
+	q.OrderBy("id")
 
-	q := s.selectQuery.Where(sq.Eq{"account_id": account_id}, sq.Lt{"balance": 0}).OrderBy("id")
 	sql, params, err := q.ToSql()
 	if err != nil {
 		return []models.Transaction{}, err
@@ -78,7 +82,7 @@ func (s *TransactionStore) Update(trans models.Transaction) (models.Transaction,
 }
 
 func (s *TransactionStore) getPaymentBalance(transaction *models.Transaction) (*models.Transaction, error) {
-	undischarged, err := s.Search(transaction.AccountID)
+	undischarged, err := s.Search(transaction.AccountID, true)
 	if err != nil {
 		return transaction, err
 	}
