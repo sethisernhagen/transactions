@@ -2,7 +2,6 @@ package stores
 
 import (
 	"database/sql"
-	"fmt"
 	"transactions/models"
 
 	sq "github.com/Masterminds/squirrel"
@@ -23,8 +22,7 @@ func NewTransactionStore(db *sql.DB) *TransactionStore {
 			Suffix("RETURNING \"id\", \"created_at\""),
 		selectQuery: psql.Select("id", "account_id", "amount", "operation_type, created_at, balance").
 			From("transaction"),
-		updateQuery: psql.Update("balance").
-			From("transaction"),
+		updateQuery: psql.Update("transaction"),
 	}
 }
 
@@ -54,17 +52,17 @@ func (s *TransactionStore) Retrieve(id int64) (*models.Transaction, error) {
 
 func (s *TransactionStore) Search(account_id int64) ([]models.Transaction, error) {
 
-	q := s.selectQuery.Where(sq.Eq{"account_id": account_id}, sq.Lt{"amount": 0})
+	q := s.selectQuery.Where(sq.Eq{"account_id": account_id}, sq.Lt{"balance": 0}).OrderBy("id")
 	sql, params, err := q.ToSql()
-	fmt.Println("sql-", sql, " params-", params)
+	if err != nil {
+		return []models.Transaction{}, err
+	}
 
 	rows, err := s.db.Query(sql, params...)
 	result := []models.Transaction{}
-	fmt.Println("err=", err)
 	for rows.Next() {
 		t := models.Transaction{}
-		err := rows.Scan(t)
-
+		err := rows.Scan(&t.TransactionID, &t.AccountID, &t.Amount, &t.OperationTypeID, &t.CreatedAt, &t.Balance)
 		if err != nil {
 			return result, err
 		}
@@ -74,7 +72,7 @@ func (s *TransactionStore) Search(account_id int64) ([]models.Transaction, error
 }
 
 func (s *TransactionStore) Update(trans models.Transaction) (models.Transaction, error) {
-	_, err := s.updateQuery.Where(sq.Eq{"id": trans.TransactionID}).RunWith(s.db).Exec()
+	_, err := s.updateQuery.Set("balance", trans.Balance).Where(sq.Eq{"id": trans.TransactionID}).RunWith(s.db).Exec()
 
 	return trans, err
 }
@@ -87,14 +85,20 @@ func (s *TransactionStore) getPaymentBalance(transaction *models.Transaction) (*
 
 	// iterate through transactions that need discharge, sub from trans
 	for _, undischarged_item := range undischarged {
-		// if we have plenty of mondy
-		if transaction.Balance >= undischarged_item.Balance {
-			transaction.Balance = transaction.Balance - undischarged_item.Balance
-		} else { //not engough to discharge
-			undischarged_item.Balance = transaction.Balance - undischarged_item.Balance
-			transaction.Balance = 0
+
+		var dischargeAmount float64
+		if transaction.Balance+undischarged_item.Balance > 0 {
+			dischargeAmount = undischarged_item.Balance * -1
+		} else {
+			dischargeAmount = transaction.Balance
 		}
+		undischarged_item.Balance = undischarged_item.Balance + dischargeAmount
 		s.Update(undischarged_item)
+		transaction.Balance = transaction.Balance - dischargeAmount
+		if transaction.Balance == 0 {
+			break
+		}
 	}
+
 	return transaction, err
 }

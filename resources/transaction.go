@@ -2,7 +2,6 @@ package resources
 
 import (
 	"errors"
-	"fmt"
 	"net/http"
 	"transactions/models"
 )
@@ -29,7 +28,7 @@ func (t *NewTransactionRequest) Bind(r *http.Request) error {
 	if !models.IsValidOperationTypeID(t.OperationType) {
 		return errors.New("Invalid OperationTypeID value")
 	}
-	fmt.Println(t.OperationType)
+
 	for _, validType := range models.NegativeOperationTypeIDs {
 		if t.OperationType == validType {
 			if t.Transaction.Amount > 0 {

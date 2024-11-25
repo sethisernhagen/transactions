@@ -15,8 +15,8 @@ var (
 		TransactionID:   -1,
 		AccountID:       -1,
 		OperationTypeID: 1,
-		Amount:          100.0,
-		Balance:         100.00,
+		Amount:          -100.0,
+		Balance:         -100.00,
 	}
 	transactionCredit1 = &models.Transaction{
 		TransactionID:   -1,
