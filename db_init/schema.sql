@@ -10,5 +10,6 @@ CREATE TABLE transaction (
     amount DECIMAL(15, 2) NOT NULL,
     operation_type VARCHAR(50) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    balance DECIMAL(15, 2) NOT NULL,
     FOREIGN KEY (account_id) REFERENCES account(id)
 );

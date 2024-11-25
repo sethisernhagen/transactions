@@ -5,6 +5,7 @@ import "time"
 type Transaction struct {
 	TransactionID   int64           `json:"id,omitempty"`
 	AccountID       int64           `json:"account_id,omitempty"`
+	Balance         float64         `json:"balance"`
 	OperationTypeID OperationTypeID `json:"operation_type_id,omitempty"`
 	Amount          float64         `json:"amount,omitempty"`
 	CreatedAt       time.Time       `json:"created_at,omitempty"`

@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestTransactionStore_Create(t *testing.T) {
+func TestTransactionStore_CreatePurchase(t *testing.T) {
 	db, err := GetTestDB(t)
 	if err != nil {
 		t.Fatal(err)
@@ -22,6 +22,24 @@ func TestTransactionStore_Create(t *testing.T) {
 	createdTransaction, err := transactionStore.Create(transactionFixture1)
 	assert.NoError(t, err)
 	assert.Equal(t, transactionFixture1, createdTransaction)
+}
+
+func TestTransactionStore_CreateCredit(t *testing.T) {
+	db, err := GetTestDB(t)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer db.Close()
+	assert.NoError(t, err)
+	accountStore := NewAccountStore(db)
+	transactionStore := NewTransactionStore(db)
+
+	acc, err := accountStore.Create(accountFixture1)
+	assert.NoError(t, err)
+	transactionFixture1.AccountID = acc.AccountID
+	createdTransaction, err := transactionStore.Create(transactionCredit1)
+	assert.NoError(t, err)
+	assert.Equal(t, transactionCredit1, createdTransaction)
 }
 
 func TestTransactionStore_Retrieve(t *testing.T) {
